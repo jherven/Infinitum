@@ -14,20 +14,54 @@
       margin: 0;
       padding: 24px 16px;
     }
-    .intro {
-      max-width: 640px;
-      margin: 0 auto;
-    }
     a {
       color: yellow;
     }
-    hr {
+    .news {
       max-width: 640px;
-      margin: 32px auto;
-      border: 0;
-      border-top: 1px solid #333;
+      margin: 0 auto;
+    }
+    .news-item {
+      padding: 16px 20px;
+      margin-bottom: 14px;
+      border: 1px solid #222;
+      border-radius: 8px;
+      background: #0c0c0c;
+    }
+    .news-item.is-hidden {
+      display: none;
+    }
+    .news-title {
+      margin: 0 0 10px;
+      font-size: 15px;
+      font-weight: bold;
+      color: #fff;
+    }
+    .news-body p {
+      margin: 0 0 10px;
+    }
+    .news-more {
+      display: block;
+      margin: 20px auto 0;
+      padding: 6px 16px;
+      background: none;
+      border: 1px solid #333;
+      border-radius: 4px;
+      color: #aaa;
+      font: inherit;
+      font-size: 11px;
+      cursor: pointer;
+      transition: color 0.15s ease, border-color 0.15s ease;
+    }
+    .news-more:hover {
+      color: #fff;
+      border-color: #555;
+    }
+    .news-more[hidden] {
+      display: none;
     }
     .memorial {
+      margin-top: 40px;
       text-align: center;
       font-size: 11px;
     }
@@ -65,21 +99,27 @@
   </style>
 </head>
 <body>
-  <div class="intro">
-    <p>
-      <b>Update 2018</b><br>
-      Vore kul att se om det fortfarande finns några Infinitum veteraner som spelar. Har skapat en in-game grupp där jag hoppas några namn ska dyka upp, gärna med gamla namnkända karaktärer men såklart även med nya om ni känner för det. Bara för skojs skull (ni får ingen DKP)<br>
-      Använd länken nedan för information hur ni går med. (för er som inte varit så aktiva i spelet är in-game grupper nytt i version ~8, som en lightversion av en guild, men crossrealm och du kan gå med i flera stycken)
-    </p>
-    <p>
-      <a href="https://www.worldofwarcraft.com/invite/eAboE7Cz3l?region=EU&amp;faction=Alliance">Blizzard invite link</a>
-    </p>
-    <p class="note">
-      //Algar (kanske den enda som av nostalgiska skäl fortfarande besöker denna sida då och då)
-    </p>
-  </div>
+  <!-- Nyheter: lägg nya överst. Mall för en ny post:
+  <article class="news-item">
+    <h2 class="news-title">Update ÅÅÅÅ-MM</h2>
+    <div class="news-body">
+      <p>Text...</p>
+    </div>
+  </article>
+  -->
+  <section class="news">
+    <article class="news-item">
+      <h2 class="news-title">Update 2018</h2>
+      <div class="news-body">
+        <p>Vore kul att se om det fortfarande finns några Infinitum veteraner som spelar. Har skapat en in-game grupp där jag hoppas några namn ska dyka upp, gärna med gamla namnkända karaktärer men såklart även med nya om ni känner för det. Bara för skojs skull (ni får ingen DKP)</p>
+        <p>Använd länken nedan för information hur ni går med. (för er som inte varit så aktiva i spelet är in-game grupper nytt i version ~8, som en lightversion av en guild, men crossrealm och du kan gå med i flera stycken)</p>
+        <p><a href="https://www.worldofwarcraft.com/invite/eAboE7Cz3l?region=EU&amp;faction=Alliance">Blizzard invite link</a></p>
+        <p class="note">//Algar (kanske den enda som av nostalgiska skäl fortfarande besöker denna sida då och då)</p>
+      </div>
+    </article>
 
-  <hr>
+    <button class="news-more" type="button" hidden>Visa fler</button>
+  </section>
 
   <div class="memorial">
     <img src="infinitum-logo.gif" alt="Infinitum">
@@ -93,5 +133,27 @@
     <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 012-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
     Föreslå innehåll
   </a>
+
+  <script>
+    (function () {
+      var VISIBLE = 2;
+      var items = [].slice.call(document.querySelectorAll('.news-item'));
+      var btn = document.querySelector('.news-more');
+      if (!btn || items.length <= VISIBLE) return;
+      var expanded = false;
+      function render() {
+        items.forEach(function (el, i) {
+          el.classList.toggle('is-hidden', !expanded && i >= VISIBLE);
+        });
+        btn.textContent = expanded ? 'Visa färre' : 'Visa fler (' + (items.length - VISIBLE) + ')';
+      }
+      btn.hidden = false;
+      render();
+      btn.addEventListener('click', function () {
+        expanded = !expanded;
+        render();
+      });
+    })();
+  </script>
 </body>
 </html>
